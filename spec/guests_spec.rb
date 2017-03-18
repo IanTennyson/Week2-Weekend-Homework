@@ -6,7 +6,7 @@ class TestGuests < MiniTest::Test
 
   def setup
 
-    @guest1 = Guest.new("Sarah")
+    @guest1 = Guest.new("Sarah", 50)
 
   end
 
