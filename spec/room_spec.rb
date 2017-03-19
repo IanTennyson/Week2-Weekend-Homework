@@ -23,20 +23,17 @@ class TestRoom < MiniTest::Test
     @guest3 = Guest.new("Paul", 50)
     @guest4 = Guest.new("Laura", 20)
     @guest5 = Guest.new("Mary", 10)
-    @guest6 = Guest.new("James", 0)
+    @guest6 = Guest.new("James", 1)
+
+    # @all_guests = [@guest1, @guest2, @guest3, @guest4, @guest5, @guest6]
     
 
-    @room1 = Room.new("Rock Room", 5)
-    @room2 = Room.new("Gangsta Rap", 1)
-    @room3 = Room.new("Non-Stop POP!", 15)
+    @room1 = Room.new("Rock Room", 5, 10)
+    @room2 = Room.new("Gangsta Rap", 1, 100)
+    @room3 = Room.new("Non-Stop POP!", 15, 20)
 
     @door_queue1 = DoorQueue.new("Pleb Queue")
-
-
-    
   end
-
-
 
   #test passed
   def test_num_of_songs_in_room
@@ -60,8 +57,6 @@ class TestRoom < MiniTest::Test
     assert_equal(3, @room1.num_of_songs_in_room())
   end
 
-
-
 #test passed
   def test_add_song_to_room_playlist()
     @room2.add_song_to_room_playlist(@song3)
@@ -81,8 +76,6 @@ class TestRoom < MiniTest::Test
     @room1.add_song_to_room_playlist(@song1)
     assert_equal(1, @room3.num_of_songs_in_room())
   end
-
-
 
 #test passed
   def test_room_has_name
@@ -108,8 +101,6 @@ class TestRoom < MiniTest::Test
     assert_equal(1, @room2.num_of_guests_in_room())
   end
 
-
-
 #test passed
   def test_add_guest_to_room
     @room1.add_guest_to_room(@guest1, @door_queue1)
@@ -119,27 +110,15 @@ class TestRoom < MiniTest::Test
     assert_equal(2, @room1.num_of_guests_in_room())
   end
 
-
-
-
-#Not Passed
-
-
-
+#test passed
   def test_return_excess_guests_to_door_queue
     @door_queue1.add_to_door_queue(@guest1)
     @door_queue1.add_to_door_queue(@guest2)
     @door_queue1.add_to_door_queue(@guest3)
     @room2.move_guest_from_door_to_room(@door_queue1)
+    @room2.remove_guest_from_queue(@door_queue1)
     assert_equal(2, @door_queue1.length_of_door_queue())
   end
-
-
-
-
-
-
-
 
 #test passed
   def test_is_guest_in_room
@@ -171,7 +150,7 @@ class TestRoom < MiniTest::Test
     @room1.remove_song_from_room(@song1)
     assert_equal(1, @room1.num_of_songs_in_room())
   end
-
+#test passed
   def test_room_capacity
     assert_equal(1, @room2.room_capacity())
   end
@@ -184,9 +163,9 @@ class TestRoom < MiniTest::Test
     @room1.add_guest_to_room(@guest4)
     @room1.add_guest_to_room(@guest5)
     @room1.add_guest_to_room(@guest6)
-
     assert_equal(5, @room1.num_of_guests_in_room())
   end
+
 #test passed
   def test_room_full
     @room2.add_guest_to_room(@guest1, @door_queue1)
@@ -194,54 +173,90 @@ class TestRoom < MiniTest::Test
   end
 
 #test passed
-def test_add_and_remove_from_door
-  @door_queue1.add_to_door_queue(@guest1)
-  @room2.move_guest_from_door_to_room(@door_queue1)
-
-  assert_equal(0, @door_queue1.length_of_door_queue)
-  assert_equal(1, @room2.num_of_guests_in_room)
-end
-
-#test passed
-def test_add_and_remove_multiple_ppl_from_door
-  @door_queue1.add_to_door_queue(@guest1)
-  @door_queue1.add_to_door_queue(@guest2)
-  @door_queue1.add_to_door_queue(@guest3)
-  @door_queue1.add_to_door_queue(@guest4)
-  @door_queue1.add_to_door_queue(@guest5)
-  @door_queue1.add_to_door_queue(@guest6)
-  @room1.move_guest_from_door_to_room(@door_queue1)
-  assert_equal(1, @door_queue1.length_of_door_queue)
-  assert_equal(5, @room1.num_of_guests_in_room)
-end
+  def test_add_and_remove_from_door
+    @door_queue1.add_to_door_queue(@guest1)
+    @room2.move_guest_from_door_to_room(@door_queue1)
+    @room2.remove_guest_from_queue(@door_queue1)
+    assert_equal(0, @door_queue1.length_of_door_queue)
+    assert_equal(1, @room2.num_of_guests_in_room)
+  end
 
 #test passed
-def test_add_ppl_to_room_delete_from_door
-  @door_queue1.add_to_door_queue(@guest1)
-  @door_queue1.add_to_door_queue(@guest2)
-  @door_queue1.add_to_door_queue(@guest3)
-  @door_queue1.add_to_door_queue(@guest4)
-  @door_queue1.add_to_door_queue(@guest5)
-  @door_queue1.add_to_door_queue(@guest6)
-  @room1.move_guest_from_door_to_room(@door_queue1)
-  assert_equal(1, @door_queue1.length_of_door_queue)
-  assert_equal(5, @room1.num_of_guests_in_room)
-end
+  def test_add_and_remove_multiple_ppl_from_door
+    @door_queue1.add_to_door_queue(@guest1)
+    @door_queue1.add_to_door_queue(@guest2)
+    @door_queue1.add_to_door_queue(@guest3)
+    @door_queue1.add_to_door_queue(@guest4)
+    @door_queue1.add_to_door_queue(@guest5)
+    @door_queue1.add_to_door_queue(@guest6)
+    @room1.move_guest_from_door_to_room(@door_queue1)
+    @room1.remove_guest_from_queue(@door_queue1)
+    assert_equal(1, @door_queue1.length_of_door_queue)
+    assert_equal(5, @room1.num_of_guests_in_room)
+  end
 
-def test_add_ppl_to_room_delete_from_door_extra_ppl_sent_back_to_door
-  @door_queue1.add_to_door_queue(@guest1)
-  @door_queue1.add_to_door_queue(@guest2)
-  @room2.move_guest_from_door_to_room(@door_queue1)
-  assert_equal(1, @door_queue1.length_of_door_queue)
-  assert_equal(1, @room2.num_of_guests_in_room)
-end
+#test passed
+  def test_add_ppl_to_room_delete_from_door
+    @door_queue1.add_to_door_queue(@guest1)
+    @door_queue1.add_to_door_queue(@guest2)
+    @door_queue1.add_to_door_queue(@guest3)
+    @door_queue1.add_to_door_queue(@guest4)
+    @door_queue1.add_to_door_queue(@guest5)
+    @door_queue1.add_to_door_queue(@guest6)
+    @room1.move_guest_from_door_to_room(@door_queue1)
+    @room1.remove_guest_from_queue(@door_queue1)
+    assert_equal(1, @door_queue1.length_of_door_queue)
+    assert_equal(5, @room1.num_of_guests_in_room)
+  end
 
-def test_message_that_guest_has_been_returned_to_the_door
-  @door_queue1.add_to_door_queue(@guest1)
-  @door_queue1.add_to_door_queue(@guest2)
-  @room2.move_guest_from_door_to_room(@door_queue1)
-  assert_equal("The Gangsta Rap room is full, Ian has been returned to the Pleb Queue.", @room2.add_guest_to_room(@guest2, @door_queue1))
-end
+#test passed
+  def test_add_ppl_to_room_delete_from_door_extra_ppl_sent_back_to_door
+    @door_queue1.add_to_door_queue(@guest1)
+    @door_queue1.add_to_door_queue(@guest2)
+    @room2.move_guest_from_door_to_room(@door_queue1)
+    @room2.remove_guest_from_queue(@door_queue1)
+    assert_equal(1, @door_queue1.length_of_door_queue)
+    assert_equal(1, @room2.num_of_guests_in_room)
+  end
 
+#test passed
+  def test_message_that_guest_has_been_returned_to_the_door
+    @door_queue1.add_to_door_queue(@guest1)
+    @door_queue1.add_to_door_queue(@guest2)
+    @room2.move_guest_from_door_to_room(@door_queue1)
+    assert_equal("The Gangsta Rap room is full, Ian has been returned to the Pleb Queue.", @room2.add_guest_to_room(@guest2, @door_queue1))
+  end
+
+#test passed
+  def test_charge_guests_for_entry
+    @guest1.add_remove_guest_cash(@room1.room_charge)
+    @guest2.add_remove_guest_cash(@room1.room_charge)
+    assert_equal(190, @guest1.cash())
+    assert_equal(90, @guest2.cash())
+  end
+
+#test passed
+  def test_remove_guest_cash_for_room_entry
+    @room1.add_guest_to_room(@guest1, @door_queue1)
+    assert_equal(190, @room1.remove_guest_cash_for_room_entry(@door_queue1, @guest1, @guest1.cash, @room1.room_charge))
+  end
+
+  #test passed
+    def test_guest_cant_afford_entry_returned_to_queue
+      @room1.remove_guest_cash_for_room_entry(@door_queue1, @guest6, @guest6.cash, @room1.room_charge)
+      assert_equal(1, @door_queue1.length_of_door_queue())
+    end
+
+    def test_enter_club
+      @door_queue1.add_to_door_queue(@guest1)
+      
+      @door_queue1.remove_guest_from_door_queue(@guest1)
+      @room1.add_guest_to_room(@guest1, @door_queue1)
+
+      assert_equal(190, @room1.remove_guest_cash_for_room_entry(@door_queue1, @guest1, @guest1.cash, @room1.room_charge))
+      
+      assert_equal(1, @room1.num_of_guests_in_room)
+      assert_equal(0, @door_queue1.length_of_door_queue)
+    end
 
 end

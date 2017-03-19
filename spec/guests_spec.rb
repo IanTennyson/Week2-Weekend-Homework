@@ -14,5 +14,17 @@ class TestGuests < MiniTest::Test
     assert_equal("Sarah", @guest1.guest_name())
   end
 
+  def test_guest_has_cash
+    assert_equal(50, @guest1.guest_cash)
+  end
+
+  def test_add_to_customer_cash
+    assert_equal(60, @guest1.add_remove_guest_cash(10))
+  end
+
+  def test_remove_to_customer_cash
+    assert_equal(40, @guest1.add_remove_guest_cash(-10))
+  end
+
 
 end
